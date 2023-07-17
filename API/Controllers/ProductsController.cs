@@ -4,7 +4,7 @@ using Core.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
-{
+{ vvv
     [ApiController]
     [Route("api/[controller]")]
     public class ProductsController : ControllerBase
