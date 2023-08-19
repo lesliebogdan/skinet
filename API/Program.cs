@@ -13,6 +13,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+// we have moved our Application Services => Extensions/ApplicationServicesExtensions
 builder.Services.AddApplicationServices(builder.Configuration);
 
 var app = builder.Build();
@@ -33,6 +35,8 @@ app.UseStatusCodePagesWithReExecute("/errors/{0}");
 //}
 
 app.UseStaticFiles();
+
+app.UseCors("CorsPolicy");
 
 app.UseAuthorization();
 
