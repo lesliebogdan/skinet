@@ -15,8 +15,8 @@ export class BasketComponent {
     this.basketService.addItemToBasket(item);
   }
 
-  removeItem(id: number,quantity: number) {
-    this.basketService.removeItemFronBasket(id,quantity);
+  removeItem(event:{id: number,quantity: number}) {
+    this.basketService.removeItemFronBasket(event.id,event.quantity);
   }
 
 }
