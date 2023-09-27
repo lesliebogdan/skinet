@@ -47,10 +47,28 @@ namespace Infrastructure.Services
 
             var subtotal = items.Sum(item => item.Price *item.Quantity);
 
-            //create the order
-            var order = new Order(items,buyerEmail,shippingAddress,deliveryMethod,subtotal);
+            // check to see if order already exists (payment intent id present on an order)
+
+            var spec = new OrderByPaymentIntentIdSpecification(basket.PaymentIntentId);
+            var order = await _unitOfWork.Repository<Order>().GetEntityWithSpec(spec);
+
+            // reset existing orders properties to the most recent (user may have updated these)
+
+            if (order != null) {
+                order.ShipToAddress = shippingAddress;
+                order.DeliveryMethod = deliveryMethod;
+                order.Subtotal = subtotal;
+                _unitOfWork.Repository<Order>().Update(order);
+            }
+            else {
+  //create the order
+            order = new Order(items,buyerEmail,shippingAddress,deliveryMethod,subtotal
+            ,basket.PaymentIntentId);
 
             _unitOfWork.Repository<Order>().Add(order);
+            }
+
+          
             // TO DO ==> save to db (will do shortly)
 
             var result = await _unitOfWork.Complete();
@@ -58,7 +76,9 @@ namespace Infrastructure.Services
             if(result <= 0) return null;
 
             // delete basket 
-            await _basketRepo.DeleteBasketAsync(basketId);
+            
+            // want to do this later (when payment successeds) => client side (eventually API side)
+            //await _basketRepo.DeleteBasketAsync(basketId);
 
             //return order
             return order;
