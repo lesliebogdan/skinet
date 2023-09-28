@@ -34,6 +34,8 @@ services.AddScoped<IUnitOfWork, UnitOfWork>();
 services.AddScoped<IProductRepository, ProductRepository>();
 services.AddScoped<IPaymentService, PaymentService>();
 
+services.AddSingleton<IResponseCacheService, ResponseCacheService>();
+
 services.AddScoped<ITokenService, TokenService>();
 services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
