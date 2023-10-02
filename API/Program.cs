@@ -7,9 +7,11 @@ using Core.Entities.Identity;
 using Core.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Identity;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +43,11 @@ app.UseSwaggerDocumentation();
 //}
 
 app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(),"Content")),RequestPath = "/Content"
+});
 
 app.UseCors("CorsPolicy");
 
@@ -48,6 +55,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapFallbackToController("Index","Fallback");
 
 // DB Build from migration
 
